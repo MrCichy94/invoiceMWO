@@ -3,9 +3,13 @@ package pl.edu.agh.mwo.invoice;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
+
+    private String invoiceNumber = getRandomNumberString();
     private Map<Product, Integer> products = new HashMap<Product, Integer>();
 
     public void addProduct(Product product) {
@@ -39,5 +43,15 @@ public class Invoice {
             totalGross = totalGross.add(product.getPriceWithTax().multiply(quantity));
         }
         return totalGross;
+    }
+
+    public String getRandomNumberString() {
+        Random rnd = new Random();
+        int number = rnd.nextInt(999999999);
+        return String.format("%06d", number);
+    }
+
+    public String getInvoiceNumber() {
+        return invoiceNumber;
     }
 }

@@ -125,4 +125,15 @@ public class InvoiceTest {
     public void testAddingNullProduct() {
         invoice.addProduct(null);
     }
+
+    @Test
+    public void testInvoiceHasNumber() {
+        Assert.assertThat(invoice.getInvoiceNumber(), Matchers.notNullValue());
+    }
+
+    @Test
+    public void getRandomNumberStringShouldReturn9DigitsStringOfNumbers() {
+        String sut = invoice.getRandomNumberString();
+        Assert.assertEquals(sut.length(), invoice.getInvoiceNumber().length());
+    }
 }
