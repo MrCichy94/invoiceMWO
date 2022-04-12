@@ -24,6 +24,7 @@ but without javadoc requirements and with severity set to error.
     </module>
 
     <module name="TreeWalker">
+        <module name="SuppressionCommentFilter"/>
         <module name="MagicNumber"/>
         <module name="OuterTypeFilename"/>
         <module name="IllegalTokenText">
