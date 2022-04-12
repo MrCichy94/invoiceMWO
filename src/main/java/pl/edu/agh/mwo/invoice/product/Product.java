@@ -2,6 +2,7 @@ package pl.edu.agh.mwo.invoice.product;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -62,14 +63,13 @@ public abstract class Product {
 
     public boolean isCarpenterDay() {
         Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        String res = formatter.format(date);
-        //CHECKSTYLE:OFF
-        return res.charAt(3) == '0'
-               && res.charAt(4) == '3'
-               && res.charAt(0) == '1'
-               && res.charAt(1) == '9';
-        //CHECKSTYLE:ON
+        SimpleDateFormat dayFormatter = new SimpleDateFormat("dd");
+        SimpleDateFormat monthFormatter = new SimpleDateFormat("MM");
+        MyDate myDate = new MyDate(
+                Integer.parseInt(dayFormatter.format(date)),
+                Integer.parseInt(monthFormatter.format(date)));
+        MyDate carpenterDay = new MyDate(19, 3);
+        return myDate.day == carpenterDay.day && myDate.month == carpenterDay.month;
     }
 
     @Override
