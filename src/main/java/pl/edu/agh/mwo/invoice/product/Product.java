@@ -64,17 +64,22 @@ public abstract class Product {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String res = formatter.format(date);
-        int monthFirst = 3, monthSecond = 4, dayFirst = 0, daySecond = 1;
-        return res.charAt(monthFirst) == '0'
-               && res.charAt(monthSecond) == '3'
-               && res.charAt(dayFirst) == '1'
-               && res.charAt(daySecond) == '9';
+        //CHECKSTYLE:OFF
+        return res.charAt(3) == '0'
+               && res.charAt(4) == '3'
+               && res.charAt(0) == '1'
+               && res.charAt(1) == '9';
+        //CHECKSTYLE:ON
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Product product = (Product) o;
         return Objects.equals(name, product.name)
                && Objects.equals(price, product.price)

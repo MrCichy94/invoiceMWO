@@ -7,8 +7,6 @@ import java.util.Random;
 
 import pl.edu.agh.mwo.invoice.product.Product;
 
-
-
 public class Invoice {
 
     private static final Integer sizeT = 1000000000;
