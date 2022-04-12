@@ -79,4 +79,11 @@ public class ProductTest {
         product.isCarpenterDay = true;
         Assert.assertThat(new BigDecimal("113.56"), Matchers.comparesEqualTo(product.getPriceWithTax()));
     }
+
+    @Test
+    public void testCarpenterDayOtherProductsWithNoExcise() {
+        Product product = new DairyProduct("Somethu", new BigDecimal("100.0"));
+        product.isCarpenterDay = true;
+        Assert.assertThat(new BigDecimal("108"), Matchers.comparesEqualTo(product.getPriceWithTax()));
+    }
 }

@@ -7,8 +7,11 @@ import java.util.Random;
 
 import pl.edu.agh.mwo.invoice.product.Product;
 
+
+
 public class Invoice {
 
+    private static final Integer sizeT = 1000000000;
     private String invoiceNumber = getRandomNumberString();
     private Map<Product, Integer> products = new HashMap<Product, Integer>();
 
@@ -51,7 +54,7 @@ public class Invoice {
 
     public String getRandomNumberString() {
         Random rnd = new Random();
-        return String.format("%09d", rnd.nextInt(1000000000));
+        return String.format("%09d", rnd.nextInt(sizeT));
     }
 
     public String getInvoiceNumber() {
@@ -61,7 +64,9 @@ public class Invoice {
     public String getProductsList() {
         StringBuilder ans = new StringBuilder();
         for (Product p : products.keySet()) {
-            ans.append(String.format("Name: %s, count: %d, price: %s \n", p.getName(), products.get(p), p.getPrice()));
+            ans.append(String.format(
+                "Name: %s, count: %d, price: %s \n", p.getName(), products.get(p), p.getPrice())
+            );
         }
         return ans.toString();
     }

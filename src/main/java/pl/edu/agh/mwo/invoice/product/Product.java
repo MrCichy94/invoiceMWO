@@ -13,6 +13,7 @@ public abstract class Product {
     private final BigDecimal taxPercent;
 
     public boolean isCarpenterDay = false;
+    //shall not be here in release prod! only for test...
 
     private static final BigDecimal excise = new BigDecimal("5.56");
 
@@ -25,7 +26,6 @@ public abstract class Product {
         this.name = name;
         this.price = price;
         this.taxPercent = tax;
-        this.isCarpenterDay = isCarpenterDay();
     }
 
     public String getName() {
@@ -41,39 +41,44 @@ public abstract class Product {
     }
 
     public BigDecimal getPriceWithTax() {
-        if (isCarpenterDay) {
+        if (isCarpenterDay) { //replace with isCarpenterDay()
             if (this.getClass().equals(FuelCanister.class)) {
                 return price;
             } else {
+                if (!this.getClass().equals(BottleOfWine.class)) {
+                    return price.multiply(taxPercent).add(price);
+                }
                 return price.multiply(taxPercent).add(price).add(excise);
             }
         } else {
-            if (!this.getClass().equals(BottleOfWine.class) && !this.getClass().equals(FuelCanister.class)) {
+            if (!this.getClass().equals(BottleOfWine.class)
+                && !this.getClass().equals(FuelCanister.class)) {
                 return price.multiply(taxPercent).add(price);
             } else {
                 return price.multiply(taxPercent).add(price).add(excise);
             }
         }
-    }
+    } //complexity :P
 
     public boolean isCarpenterDay() {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String res = formatter.format(date);
-        return res.charAt(3) == '0' &&
-                res.charAt(4) == '3' &&
-                res.charAt(0) == '1' &&
-                res.charAt(1) == '9';
+        int monthFirst = 3, monthSecond = 4, dayFirst = 0, daySecond = 1;
+        return res.charAt(monthFirst) == '0'
+               && res.charAt(monthSecond) == '3'
+               && res.charAt(dayFirst) == '1'
+               && res.charAt(daySecond) == '9';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
         Product product = (Product) o;
-        return Objects.equals(name, product.name) &&
-               Objects.equals(price, product.price) &&
-               Objects.equals(taxPercent, product.taxPercent);
+        return Objects.equals(name, product.name)
+               && Objects.equals(price, product.price)
+               && Objects.equals(taxPercent, product.taxPercent);
     }
 
     @Override
