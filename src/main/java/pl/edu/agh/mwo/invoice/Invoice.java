@@ -20,7 +20,11 @@ public class Invoice {
         if (product == null || quantity <= 0) {
             throw new IllegalArgumentException();
         }
-        products.put(product, quantity);
+        if (products.containsKey(product)) {
+            products.replace(product, products.get(product) + quantity);
+        } else {
+            products.put(product, quantity);
+        }
     }
 
     public BigDecimal getNetTotal() {
@@ -47,11 +51,18 @@ public class Invoice {
 
     public String getRandomNumberString() {
         Random rnd = new Random();
-        int number = rnd.nextInt(999999999);
-        return String.format("%06d", number);
+        return String.format("%09d", rnd.nextInt(1000000000));
     }
 
     public String getInvoiceNumber() {
         return invoiceNumber;
+    }
+
+    public String getProductsList() {
+        StringBuilder ans = new StringBuilder();
+        for (Product p : products.keySet()) {
+            ans.append(String.format("Name: %s, count: %d, price: %s \n", p.getName(), products.get(p), p.getPrice()));
+        }
+        return ans.toString();
     }
 }

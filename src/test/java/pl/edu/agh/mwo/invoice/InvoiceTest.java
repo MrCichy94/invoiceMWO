@@ -7,11 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.mwo.invoice.Invoice;
-import pl.edu.agh.mwo.invoice.product.DairyProduct;
-import pl.edu.agh.mwo.invoice.product.OtherProduct;
-import pl.edu.agh.mwo.invoice.product.Product;
-import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
+import pl.edu.agh.mwo.invoice.product.*;
+
 
 public class InvoiceTest {
     private Invoice invoice;
@@ -47,7 +44,7 @@ public class InvoiceTest {
 
     @Test
     public void testInvoiceSubtotalWithManySameProducts() {
-        Product onions = new TaxFreeProduct("Warzywa", BigDecimal.valueOf(10));
+        Product onions = new TaxFreeProduct("Warzywa", new BigDecimal("10"));
         invoice.addProduct(onions, 100);
         Assert.assertThat(new BigDecimal("1000"), Matchers.comparesEqualTo(invoice.getNetTotal()));
     }
@@ -135,5 +132,49 @@ public class InvoiceTest {
     public void getRandomNumberStringShouldReturn9DigitsStringOfNumbers() {
         String sut = invoice.getRandomNumberString();
         Assert.assertEquals(sut.length(), invoice.getInvoiceNumber().length());
+    }
+
+    @Test
+    public void getProductsListShouldReturnEmptyString() {
+        Assert.assertTrue(invoice.getProductsList().isEmpty());
+    }
+
+    @Test
+    public void getProductsListShouldReturnCorrectString() {
+        // 2x kubek - price: 10
+        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
+        Assert.assertTrue(invoice.getProductsList().contains("Kubek"));
+    }
+
+    @Test
+    public void getProductsListShouldReturnCorrectStringWithMultipleItems() {
+        // 2x kubek - price: 10
+        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
+        invoice.addProduct(new TaxFreeProduct("Kóbek", new BigDecimal("5")), 2);
+        Assert.assertTrue(invoice.getProductsList().contains("Kubek"));
+        Assert.assertTrue(invoice.getProductsList().contains("Kóbek"));
+    }
+
+    @Test
+    public void addProductShouldRecalculateQuantityInsteadOfCreatingAnotherPosition() {
+        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 1);
+        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
+        System.out.println(invoice.getProductsList());
+        Assert.assertEquals(invoice.getNetTotal(), new BigDecimal("15"));
+        Assert.assertTrue(invoice.getProductsList().contains("3"));
+    }
+
+    @Test
+    public void testInvoiceHasProperMainValuesForManyProductWithExciseToo() {
+        // price with tax: 113.56
+        invoice.addProduct(new FuelCanister("DIESEL", new BigDecimal("100")));
+        // price with tax: 108
+        invoice.addProduct(new DairyProduct("Maslo", new BigDecimal("100")));
+        // price with tax: 12.30
+        invoice.addProduct(new OtherProduct("Chipsy", new BigDecimal("10")));
+        Assert.assertThat(new BigDecimal("233.86"), Matchers.comparesEqualTo(invoice.getGrossTotal()));
+        Assert.assertThat(new BigDecimal("210"), Matchers.comparesEqualTo(invoice.getNetTotal()));
+        Assert.assertThat(new BigDecimal("23.86"), Matchers.comparesEqualTo(invoice.getTaxTotal()));
+        //all 3 cuz there is no sense create seperated tests, CPD hit us
     }
 }
