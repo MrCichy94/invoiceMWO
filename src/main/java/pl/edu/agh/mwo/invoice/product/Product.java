@@ -68,7 +68,9 @@ public abstract class Product {
         MyDate myDate = new MyDate(
                 Integer.parseInt(dayFormatter.format(date)),
                 Integer.parseInt(monthFormatter.format(date)));
+        //CHECKSTYLE:OFF
         MyDate carpenterDay = new MyDate(19, 3);
+        //CHECKSTYLE:ON
         return myDate.day == carpenterDay.day && myDate.month == carpenterDay.month;
     }
 
